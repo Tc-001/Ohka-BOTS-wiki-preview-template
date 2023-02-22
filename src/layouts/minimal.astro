@@ -1,0 +1,58 @@
+---
+import Fonts from "./_Fonts.astro";
+import JSD from "helper:JsDelivr";
+
+var { page, title, desc, desclong, preloads, base } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<script is:inline>
+			window.globalThis = globalThis || window;
+		</script>
+
+		{base && <base href={base} />}
+
+		<link rel="preconnect" href="https://api.countapi.xyz" />
+		<link rel="preconnect" href="https://ohkaspace.com" />
+
+		<Fonts />
+
+		<slot name="head" />
+	</head>
+
+	<body>
+		<header></header>
+		<nav></nav>
+		<slot />
+		<style lang="scss">
+			@use "../styles/themes.sass";
+			@import "../styles/stylings.sass";
+			@import "../styles/global.sass";
+
+
+			header {
+				height: #{$header_height};
+				width: 100%;
+				background-color: #{$dark_col};
+				@include bottom-shadow();
+				position: relative;
+				z-index: 101;
+				display: grid;
+				overflow: hidden;
+			}
+			nav {
+				@include bottom-shadow();
+				background-color: #{$main_col};
+				width: 100%;
+				height: #{$nav_height};
+				z-index: 100;
+				text-align: center;
+				font-size: 0px;
+			}
+		</style>
+	</body>
+</html>

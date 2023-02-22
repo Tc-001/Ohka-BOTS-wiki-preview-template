@@ -1,0 +1,116 @@
+@import "./stylings.sass"
+
+*:not(discord-messages *)
+	font-family: "Nunito Sans", sans
+	--sides: #{$padding_sides}
+	@media screen and (max-width: 1000px)
+		--sides: 1rem
+
+html
+	scroll-behavior: smooth
+
+body
+	overflow-x: hidden
+	margin: 0
+	background-color: $bg_col!important
+	*:not(discord-messages *)
+		color: $text_col
+
+
+a
+	cursor: pointer
+
+h1
+	font-family: "Oxanium", sans
+
+button
+	border: none
+	padding: 1rem
+	border-radius: 1rem
+	background-color: $main_col
+	transition: background-color 0.1s
+	cursor: pointer
+	&:hover
+		background-color: $hl_col
+
+code
+	background-color: $hl_col
+	border-radius: 0.2em
+	padding-left: 0.2em
+	padding-right: 0.2em
+	overflow: hidden
+	font-family: "Fira Mono", monospace
+	&.language-code_header
+		display: inline-block
+		&::before
+			display: inline-block
+			content: "Code"
+			display: block
+			width: 500%
+			margin-left: -0.2em
+			padding-left: 0.2em
+			background-color: $main_col
+
+blockquote
+	border-left: 0.3rem solid $main_col
+	padding-left: 0.5rem
+	margin-left: 1rem
+
+//img:not(.logo):not(.noround)
+//	@include drop-shadow()
+//	border-radius: 0.5rem
+img.round
+	@include drop-shadow()
+	border-radius: 0.5rem
+
+.mobile-hidden
+	@media screen and (max-width: 500px)
+		display: none
+
+.mobile-show
+	display: none
+	@media screen and (max-width: 500px)
+		display: block
+
+[astro-icon]
+	width: 1em
+	vertical-align: middle
+	fill: $text_col
+
+#baguetteBox-overlay
+	img
+		max-width: 80%!important
+
+input, select
+	background-color: $main_col
+	border: none
+	border-radius: 0.5rem
+	padding: 0.3rem
+	margin: 0.1rem!important
+
+.noline a
+	text-decoration: none
+
+body[data="dark"]
+	header
+		img
+			filter: invert(100%) hue-rotate(180deg)
+	.falsedark
+		filter: invert(100%) hue-rotate(180deg)
+		img //revert for images
+			filter: invert(100%) hue-rotate(180deg)
+
+.tippy-box[data-theme~='ohka'] 
+	background-color: $hl_col
+	color: $text_col
+	border: .1rem solid var(--bg_col)
+	padding: 0.5rem
+	border-radius: 0.3rem
+	width: 20rem
+	@include drop-shadow()
+	text-align: left
+	font-size: medium
+	white-space: normal
+
+[x-cloak]
+	display: none !important

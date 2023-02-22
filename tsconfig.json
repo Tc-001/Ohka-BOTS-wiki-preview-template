@@ -1,3 +1,19 @@
 {
-  "extends": "astro/tsconfigs/base"
-}
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "layout:*": ["src/layouts/*.astro"],
+      "component:*": ["src/components/*"],
+			"helper:*": ["src/components/helpers/*.astro"],
+			"script:*": ["src/scripts/*"],
+      "public:*": ["public/*"],
+      "style:*": ["src/components/styles/*.sass"],
+      "page:*": ["src/pages/*"]
+    },
+    "target": "ESNext",
+    "types": ["vite/client", "node"]
+  }
+} 

@@ -1,0 +1,35 @@
+---
+import Layout from "../layouts/minimal.astro";
+---
+<Layout title="Error 404" desc="Page not found!" page="Error" base="/404/">
+	<center>
+		<div class="bots" id="dizzy"></div>
+		<h1>Whoops! Something has gone wrong!</h1>
+		<h2>Error <code>404</code></h2>
+		<h2><code>Trust me, I looked!</code></h2>
+		<a href="/Home/">
+			<button> Back to the homepage! </button>
+		</a>
+		<script>
+			[1, 2, 3]
+				.map((n) => `/assets/images/icons/dizzy${n}.png`)
+				.sort(() => Math.random() - 0.5)
+				.slice(Math.floor(Math.random() * 3))
+				.forEach((url) => {
+					let img = document.createElement("img");
+					img.src = url;
+					img.classList.add("logo");
+					document.getElementById("dizzy").appendChild(img);
+				});
+		</script>
+	</center>
+</Layout>
+
+<style lang="sass">
+		div.bots
+			height: 7rem
+			padding-top: 1rem
+			:global(img)
+				height: 7rem
+				width: auto
+</style>

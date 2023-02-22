@@ -1,0 +1,31 @@
+---
+import { Picture } from "astro-imagetools/components";
+
+const { src, alt = "", quality = 85, linked, optimised = false } = Astro.props;
+
+let passed = { ...Astro.props };
+
+
+delete passed.placeholder;
+delete passed.src;
+delete passed.linked;
+
+const Linked = linked?"a":""
+
+---
+
+{() => {
+	const img = optimised?<Picture
+		{src}
+		{alt}
+		aspect={passed.width/passed.height}
+		layout="fullWidth"
+	/>: <img {src} {alt} {...passed}/>
+
+	return linked?<a href={src}>{img}</a>:img
+}}
+
+<style lang="sass">
+	:global(picture) :global(img)
+		color: #00000000
+</style>

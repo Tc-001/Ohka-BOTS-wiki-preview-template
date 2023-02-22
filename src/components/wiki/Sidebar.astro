@@ -1,0 +1,114 @@
+---
+import Icon from "astro-icon"
+
+var {paths, isChild = false, parentName = "Wiki", parentPath = "", currentPage} 
+	= Astro.props as {paths: string[], isChild: boolean, parentName: string, parentPath: string, currentPage: string}
+
+//console.log(currentPage);
+
+/*
+paths =   ["foo", "bar/baz"]
+            ^^^ Render
+						       ^^^^^^^ pass along as "baz"
+*/
+
+let bucket = []
+let toRender = paths.filter(path => {
+	let folder = path.split("/")[0]
+	if(bucket.includes(folder)) return false
+	bucket.push(folder)
+	return true
+})
+
+
+//paths.filter(x => !x.includes("/"))
+
+function goDeeper(folder: string) {
+	const newPaths = paths.filter(x => x.startsWith(folder))
+	return newPaths.map(x => x.split("/").slice(1).join("/"))
+}
+
+console.log(Astro.props);
+
+console.log(parentPath?(parentPath+"/"):"");
+
+
+---
+{isChild ? (
+	<details 
+		class="inlay" 
+		x-bind:open={parentName=="Wiki"?"!window.matchMedia('(max-width: 500px)').matches":(currentPage.includes(parentName)?true:false)}
+		open={parentName=="Wiki"||currentPage.includes(parentName)}
+	>
+		<summary class="category"><Icon name="bi:folder" />  {parentName.replace(/_/g, " ")}</summary>
+		<div class="children">			
+			{toRender.map(path => path.includes("/")?(
+				<Astro.self 
+					paths={goDeeper(path.split("/")[0])} 
+					isChild={true} 
+					parentName={path.split("/")[0]} 
+					parentPath={(parentPath?(parentPath+"/"):"")+path.split("/")[0]}
+					currentPage={currentPage}
+				/>
+			):(
+				<a href={"/Wiki/"+(parentPath?(parentPath+"/"):"")+path+"/"}>
+					<span class:list={{page:true, current: currentPage.endsWith(path)}}>
+						<Icon name="bi:file-earmark-text"/>
+						{path.replace(/_/g, " ")}
+					</span>
+				</a>
+			))}
+		</div>
+	</details>
+) :
+	<div class="navigate" x-data="{}">
+		<Astro.self paths={paths} isChild={true} currentPage={currentPage}/>
+	</div>
+}
+
+<style lang="sass">
+	@import "../../styles/stylings.sass"
+	div.navigate
+		padding: 0 0.3rem
+		min-width: 10rem
+		h2
+			margin: 0
+		@media screen and (max-width: 500px)
+			display: block
+			width: auto
+			position: static
+		details.inlay
+			margin: 0.3rem 0rem
+			background: $hl_col
+			//border: 0.2rem solid $main_col
+			border-radius: 0.5rem
+			//padding: 0.3rem
+			div.children
+				padding-left: 1rem
+			summary.category
+				font-weight: bold
+				color: $text_col
+				font-size: larger
+				cursor: pointer
+				border-radius: 0.3rem
+				background: $main_col
+				display: block
+				padding: 0 0.5rem 0 0.3rem
+			a
+				text-decoration: none
+				span.page
+					display: block
+					transition: transform 0.1s
+					color: $inv_mono_col
+					line-height: 1em
+					margin: 0.3rem 0rem
+					padding: 0.3rem 0.1rem
+					border-radius: 0.3rem
+					background: $bg_col
+					&:hover
+						transform: translateX(0.2rem)
+					&.current
+						background: $main-col
+					:global(svg)
+						vertical-align: sub
+</style>

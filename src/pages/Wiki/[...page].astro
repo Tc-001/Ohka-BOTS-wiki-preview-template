@@ -1,0 +1,75 @@
+---
+import Layout from "layout:minimal";
+
+import Content from "component:wiki/Content.astro";
+import Sidebar from "component:wiki/Sidebar.astro";
+
+import { getAllArticles } from "./searchIndex.js";
+import Search from "component:wiki/Search.svelte";
+
+export async function getStaticPaths({ paginate }) {
+	// @ts-ingore
+	const all_pages = await getAllArticles();
+
+	var fin_pages = all_pages;
+	//console.log(fin_pages[0]);
+
+	return fin_pages;
+}
+
+const { page } = Astro.params;
+---
+
+<Layout
+	title={`${page.toString().replace(/_/g, " ")} @ Wiki`}
+	desc={`Help, tips and tricks to help improve your defenses`}
+	desclong={`Help, tips and tricks to help improve your defenses`}
+	page="Wiki"
+>
+	<div class="main">
+		<div class="sidebar">
+			<Search client:load />
+			<Sidebar paths={Astro.props.allPagePaths} currentPage={page} />
+		</div>
+
+		<div class="content">
+			<Content Content={Astro.props.Content} page={page} />
+		</div>
+	</div>
+</Layout>
+
+<style lang="sass">
+	@import "../../styles/stylings"
+
+	div.main
+		display: grid
+		grid-template-columns: max-content 1fr
+		grid-template-rows: 1fr
+		grid-column-gap: 0.5rem
+		grid-row-gap: 0.5rem
+		align-items: start
+
+		width: calc( 100vw - var(--sides) - calc(var(--sides) / 2) )
+		margin: 1rem var(--sides) 0rem auto
+
+		div.sidebar
+			grid-area: 1 / 1 / 2 / 2
+			background: $hl_col
+			border-radius: 0.5rem
+			box-shadow: .1rem .1rem .4rem var(--dark_col)
+		div.content
+			grid-area: 1 / 2 / 2 / 3
+			background: $mono_col
+			border-radius: 0.5rem
+			padding: 0.3rem 0.5rem
+			box-shadow: .1rem .1rem .4rem var(--dark_col)
+
+		@media screen and (max-width: 800px)
+			grid-template-columns: 1fr
+			grid-template-rows: max-content max-content
+
+			div.sidebar
+				grid-area: 1 / 1 / 2 / 2
+			div.content
+				grid-area: 2 / 1 / 3 / 2
+</style>

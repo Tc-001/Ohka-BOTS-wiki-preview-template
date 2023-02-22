@@ -1,0 +1,26 @@
+---
+var { js, css, defer } = Astro.props;
+
+var dev = process.env.NODE_ENV == "development";
+
+const parsej = (s) =>
+	s.endsWith(".min.js") ? s : s + (dev ? ".js" : ".min.js");
+const parsec = (s) =>
+	s.endsWith(".min.css") ? s : s + (dev ? ".css" : ".min.css");
+
+const combinejs = () =>
+	`https://cdn.jsdelivr.net/${js.length > 1 ? "combine/" : ""}${js
+		.map((x) => parsej(x))
+		.join(",")}`;
+
+const combinecss = () =>
+	`https://cdn.jsdelivr.net/${css.length > 1 ? "combine/" : ""}${css
+		.map((x) => parsec(x))
+		.join(",")}`;
+---
+
+{js && <script src={combinejs()} crossorigin="anonymous" defer={defer}></script>}
+
+{css && 
+    <link rel="stylesheet" href={combinecss()} crossorigin="anonymous">
+}

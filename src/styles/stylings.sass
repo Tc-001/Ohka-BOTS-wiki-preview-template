@@ -1,0 +1,24 @@
+$main_col: var(--main_col)
+$accent_col: var(--accent_col)
+$dark_col: var(--dark_col)
+$bg_col: var(--bg_col)
+$hl_col: var(--hl_col)
+$text_col: var(--text_col)
+$mono_col: var(--mono_col)
+$inv_mono_col: var(--inv_mono_col)
+
+$padding_sides: max(20vw, calc( ( 100vw - 1150px ) / 2 ))
+
+$nav_height: 3rem
+$header_height: 8rem
+
+@mixin bottom-shadow($col: $dark_col)
+	box-shadow: 0 0 0.5rem 0.1rem $col
+	clip-path: inset(0px 0px -100rem 0px)
+
+@mixin drop-shadow($col: $dark_col)
+	filter: drop-shadow(.1rem .1rem .2rem $col)
+
+@mixin margin-sides()
+	margin-left: var(--sides)
+	margin-right: var(--sides)

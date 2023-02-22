@@ -1,0 +1,169 @@
+---
+import { Icon } from 'astro-icon'
+import JSD from "helper:JsDelivr";
+
+
+const { page, Content, rawPath } = Astro.props;
+
+---
+
+<JSD 
+	js={["npm/markedjs@3/marked.min.js", "npm/baguettebox.js@1/dist/baguetteBox"]} 
+	css={["npm/baguettebox.js@1/dist/baguetteBox"]}
+/>
+
+<div class="article_main" id="article-large">
+	<div class="artwrap">
+		<div class="article" id="article">
+			<Content />
+		</div>
+	</div>
+	<!--
+	<div class="controls">
+		<a
+			href={`/Wiki/editor/?file=${encodeURIComponent(page)}`}
+			target="_blank"
+			id="editicon">
+			<Icon name="bi:pencil-square" alt="Edit page" />
+		</a>
+	</div>
+	-->
+</div>
+
+<div class="disclaimer" id="disclaimer" style="display: none;">
+	<Icon name="bi:exclamation-triangle-fill" />
+	This is a preview version of a wiki edit. We do <b>NOT</b> endorse any content
+	shown!
+	<Icon name="bi:exclamation-triangle-fill" />
+	<a href={`/Wiki/${page}/`}>
+		<button>
+			<Icon name="bi:arrow-counterclockwise" />
+			View original
+		</button>
+	</a>
+</div>
+
+<script>
+	globalThis.ob_bbinit = function(){
+		document.querySelectorAll(".article img").forEach(el => {
+			let a = document.createElement("a")
+			a.setAttribute("href", el.getAttribute("src"))
+			el.parentNode.insertBefore(a, el)
+			a.append(el)
+		})
+		globalThis.baguetteBox.run(".article")
+	}
+	globalThis.ob_bbinit();
+</script>
+
+<style lang="sass">
+		@import "../../styles/stylings.sass"
+		.article_main
+			position: relative
+			@media screen and (max-width: 500px)
+				display: block
+				width: auto
+				margin-right: 0
+			:global(*)
+				margin-top: 0px
+			.disclaimer
+				background-color: #ffff0022
+				color: $inv_mono_col
+				font-nav: "title"
+				font-weight: bold
+				font-size: linearGradient
+				padding: 0.5rem
+				border: 0.5rem solid #ffaa00
+				margin-bottom: 1rem
+				margin-top: -0.5rem
+				margin-left: -0.5rem
+				margin-right: -0.5rem
+				text-align: center
+				:global(*)
+					color: $inv_mono_col
+				a
+					text-decoration: none
+					button
+						display: block
+						width: fit-content
+						background-color: #00ffaa55
+						border-radius: 0.5rem
+						padding: 0.5rem
+						cursor: pointer
+						font-size: larger
+						font-weight: bold
+						margin: auto
+			div.controls
+				height: 1rem
+				width: fit-content
+				position: absolute
+				bottom: calc(0px - 1em - 0.4rem)
+				right: 0
+		.diff-container
+			width: calc(100% - max( 10rem, min(var(--sides), 50rem) ) - 2.3rem - var(--sides))
+			margin-left: clamp(10rem, calc(var(--sides) + 1rem), 50rem)
+			text-align: right
+			button
+				padding: 0.5rem
+				border-radius: 0.5rem
+				margin: 0.2rem
+			pre
+				text-align: left
+				width: 100%
+				white-space: break-spaces
+				margin-top: 1rem
+				margin-bottom: 0.5rem
+				background-color: $hl_col
+				border: 0.2rem solid $main_col
+				padding: 0.5rem
+				border-radius: 0.5rem
+				line-height: initial
+				:global(span), :global(ins), :global(del)
+					overflow-wrap: break-word
+					display: inline
+					//padding-left: 0.3rem
+					//padding-right: 0.3rem
+					border-radius: 0.3rem
+				:global(ins)
+					background-color: #00ff0055
+				:global(del)
+					background-color: #ff000055
+</style>
+<style is:global lang="sass">
+		@import "../../styles/stylings.sass"
+		.article
+			img
+				width: 20vw
+				margin: 0.5rem
+				background-size: 100%
+			hr
+				color: transparent
+				border-top: 0.2rem solid $bg_col
+				margin-top: 0.2rem!important
+				margin-bottom: 0.4rem
+			table
+				border-collapse: collapse
+				td, th
+					border: 0.2rem solid $bg_col
+					padding: 0.1rem 0.5rem 0.1rem 0.5rem
+					text-align: center
+				tr:nth-child(even):not(.nodarken)
+					background: $bg_col
+				th
+					background: $hl_col
+				thead tr th
+					border: 0.2rem solid $hl_col
+			td.float
+				vertical-align: top
+				span
+					position: sticky
+					top: 3.5rem
+					left: 0
+					display: block
+
+			lite-youtube
+				@include drop_shadow()
+				border-radius: 0.5rem
+				width: min(25rem, 90%)
+
+</style>

@@ -1,0 +1,20 @@
+---
+import getItem from "script:item"
+import Card from "./ItemCard.svelte"
+
+const data = import.meta.env.PUBLIC_CF_DEV != 1 ? 
+	await getItem(Astro.props.id??3042120)
+	: {"name":"ITEM "+Astro.props.id,"id":Astro.props.id.toString(),"script":"","description":"ITEM DESCRIPTION (this is a placeholder card to not hammer the server for preview builds)","part":"0","bot":"0","legendary":"0"}
+---
+<span>
+	<Card data={data} id="0" desc={Astro.props.desc}/>
+</span>
+
+<style>
+	span {
+		display: inline-block; 
+		vertical-align: top; 
+		height: auto;
+		display: inline-block;
+	}
+</style>

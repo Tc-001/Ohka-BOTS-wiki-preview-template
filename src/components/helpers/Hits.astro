@@ -1,0 +1,47 @@
+---
+import crypto from "node:crypto";
+
+import XElement from "astro-xelement"
+
+const {Code} = XElement
+
+const { host } = Astro.site;
+const pathname = Astro.url.pathname
+
+const encoded = crypto
+	.createHash("sha256")
+	.update(pathname, "utf8")
+	.digest("hex")
+	.substr(0, 32);
+
+var dev = process.env.NODE_ENV == "development";
+
+const kv = `${host}${dev ? "DEV" : ""}/${encoded}`;
+---
+
+<div>
+	<p style="text-align: center; padding-bottom: 0.5rem;">
+		This page has been seen 
+
+		<Code 
+		define:vars={{kv}}
+		@do={(el)=>{
+			fetch(`https://api.countapi.xyz/hit/${kv}`)
+				.then(x=>x.json())
+				.then(x=>x.value)
+				.then(x => x<20?'<20':x)
+				.then(x=>el.innerText = x)
+				.catch(()=>el.parentNode.style.display = 'none');
+			}}
+		>...</Code>
+
+		times. Cool!
+		<br />
+		<span style="opacity: 0.5;">
+			(Uses <a href="https://countapi.xyz/">countapi.xyz</a>)
+		</span>
+	</p>
+	<p style="text-align: center; padding-bottom: 0rem; opacity: 0.5;	">
+		Team Ohka 2023 &#x2219; Acclaim BOTS Remake &#x2219; {new Date().toISOString().split("T")[0]}
+	</p>
+</div>

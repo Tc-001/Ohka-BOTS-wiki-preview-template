@@ -1,0 +1,116 @@
+---
+import Spinner from "component:Spinner.svelte";
+import JSD from "helper:JsDelivr";
+---
+
+<JSD
+	js={["npm/easymde@2/dist/easymde.min.js", "npm/lz-string@1/libs/lz-string", "npm/dompurify@2/dist/purify", "npm/marked@4/marked.min.js"]}
+	css={["npm/easymde@2/dist/easymde.min.css"]} />
+<JSD css={["npm/font-awesome@4.7.0/css/font-awesome"]} />
+
+<main>
+	<div class="falsedark">
+		<span id="spinner" class="spinner">
+			<Spinner />
+		</span>
+		<textarea
+			name="mdcontent"
+			id="mdcontent"
+			cols="30"
+			rows="10"
+			style="display: none;">Loading...</textarea>
+	</div>
+	<div class="buttonwrap">
+		<button onclick="prev()">Preview changes</button>
+		<button onclick="cpy(event)">Copy shareable link</button>
+	</div>
+</main>
+
+<script>
+	function copy(e,{target:t=document.body}={}){const n=document.createElement("textarea"),o=document.activeElement;n.value=e,n.setAttribute("readonly",""),n.style.contain="strict",n.style.position="absolute",n.style.left="-9999px",n.style.fontSize="12pt";const c=document.getSelection();let l=!1;c.rangeCount>0&&(l=c.getRangeAt(0)),t.append(n),n.select(),n.selectionStart=0,n.selectionEnd=e.length;let a=!1;try{a=document.execCommand("copy")}catch{}return n.remove(),l&&(c.removeAllRanges(),c.addRange(l)),o&&o.focus(),a}
+
+	var p = new URLSearchParams(window.location.search);
+	var q = p.get("file");
+	var cc =
+		p.get("custom") &&
+		LZString.decompressFromEncodedURIComponent(p.get("custom"));
+	var m;
+	if (q == null) {
+		//location.pathname = "/Wiki/"
+		console.error("No path provided!");
+	}
+	fetch("/Wiki/" + q)
+		.then((r) => r.text())
+		.then((t) => {
+			var e = /%%%%(\w|\d|\+|\/)+={0,2}%%%%/.exec(t)[0].replace(/%/g, "");
+			document.getElementById("spinner").remove();
+			m = new EasyMDE({
+				element: document.getElementById("mdcontent"),
+				hideIcons: ["guide", "fullscreen", "side-by-side"],
+				autoDownloadFontAwesome: false,
+				previewRender: function(t) {
+					return DOMPurify.sanitize(marked.parse(t))
+				}
+			});
+			m.value(cc ?? atob(e));
+			m.codemirror.on("change", function () {
+				p.set("custom", gcc());
+				window.history.pushState({}, document.title, "?" + p.toString());
+			});
+			//m.value(e)
+		});
+
+	function prev() {
+		var u = "/Wiki/" + q + "?custom_edit=%3D" + gcc();
+		window.open(u);
+	}
+
+	function cpy(e) {
+		var u = location.origin + "/Wiki/" + q + "?custom_edit=%3D" + gcc();
+		copy(u)
+
+		var p = e.target.innerText
+
+		e.target.innerText = "Copied!"
+		e.target.onclick = function(){}
+
+		setTimeout(() => {
+			e.target.innerText = p
+			e.target.onclick = cpy
+		}, 1000);
+	}
+
+	function gcc() {
+		return LZString.compressToEncodedURIComponent(m.value());
+	}
+</script>
+
+<style>
+	main {
+		margin-left: 3rem;
+		margin-right: 3rem;
+		padding-top: 1rem;
+	}
+
+	div.falsedark {
+		background-color: white;
+		height: 60vh;
+		height: auto;
+		--text_col: black;
+	}
+
+	:global(.CodeMirror) {
+		height: inherit !important;
+	}
+	
+	.spinner {
+		padding: 1rem;
+	}
+
+	.buttonwrap {
+		display: block;
+		margin: auto;
+		padding: 1rem;
+		text-align: center;
+	}
+</style>

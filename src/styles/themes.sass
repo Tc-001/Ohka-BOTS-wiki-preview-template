@@ -1,0 +1,34 @@
+$theme_light_main_col: #43aeff
+$theme_light_accent_col: #0062ac
+$theme_light_dark_col: darken(#003359, 10%)
+$theme_light_text_col: $theme_light_dark_col
+$theme_light_mono_col: #fff
+$theme_light_bg_col: lighten($theme_light_main_col, 30%)
+$theme_light_hl_col: lighten($theme_light_main_col, 20%)
+
+$theme_dark_main_col: darken(#003359, 10%)
+$theme_dark_accent_col: #0062ac
+$theme_dark_dark_col: darken(#003359, 20%)
+$theme_dark_text_col: lighten(#43aeff, 30%)
+$theme_dark_mono_col: #000
+$theme_dark_bg_col: lighten($theme_dark_main_col, 10%)
+$theme_dark_hl_col: lighten($theme_dark_main_col, 20%)
+
+:global(body)
+	--main_col: #{$theme_light_main_col}
+	--accent_col: #{$theme_light_accent_col}
+	--dark_col: #{$theme_light_dark_col}
+	--bg_col: #{$theme_light_bg_col}
+	--hl_col: #{$theme_light_hl_col}
+	--text_col: #{$theme_light_text_col}
+	--mono_col: #{$theme_light_mono_col}
+	--inv_mono_col: #{invert($theme_light_mono_col)}
+:global(body[data="dark"])
+	--main_col: #{$theme_dark_main_col}
+	--accent_col: #{$theme_dark_accent_col}
+	--dark_col: #{$theme_dark_dark_col}
+	--bg_col: #{$theme_dark_bg_col}
+	--hl_col: #{$theme_dark_hl_col}
+	--text_col: #{$theme_dark_text_col}
+	--mono_col: #{$theme_dark_mono_col}
+	--inv_mono_col: #{invert($theme_dark_mono_col)}
