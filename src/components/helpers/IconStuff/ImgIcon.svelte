@@ -87,8 +87,8 @@
 
 	.iconWrap
 		img
-			width: 100%
-			height: auto 
+			width: 5rem
+			height: 5rem
 			display: inline-block
 			margin: 0
 			padding: 0
